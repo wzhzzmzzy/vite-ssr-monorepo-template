@@ -1,7 +1,5 @@
 import {Helmet} from 'react-helmet-async'
-import Counter from '@/views/home/test'
-
-// import TinyExcel from '@/components/tiny-excel'
+import Counter from '@/views/home/counter'
 
 function Home() {
   return (

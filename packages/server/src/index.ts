@@ -7,18 +7,19 @@ type SSRApp = FastifyInstance & {
 
 function createServer(): FastifyInstance {
   const app = Fastify ()
+
   // const svelteRenderOptions : ViteRenderOptions = {
-  //   appPackage: '@sprinkle/svelte-app',
+  //   appPackage: '@my-monorepo/svelte-app',
   //   framework: 'svelte'
   // }
   const reactRenderOptions : ViteRenderOptions = {
-    appPackage: '@sprinkle/react-app',
+    appPackage: '@my-monorepo/react-app',
     framework: 'react'
   }
 
   void app.register<ViteRenderOptions>(viteRender, reactRenderOptions)
 
-  app.get('*', async (request, reply) => {
+  app.get('/', async (request, reply) => {
     try {
       const html = await (app as unknown as SSRApp).viteRender(request)
       void reply.type('text/html').send(html)
@@ -33,8 +34,8 @@ function createServer(): FastifyInstance {
 async function startServer() {
   const server = createServer()
   await server.ready()
-  await server.listen(3002)
-  console.log('Server is listening at http://localhost:3002')
+  await server.listen(3003)
+  console.log('Server is listening at http://localhost:3003')
 }
 
 void startServer()

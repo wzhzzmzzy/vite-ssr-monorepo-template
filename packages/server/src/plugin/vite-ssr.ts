@@ -113,11 +113,13 @@ const viteRender : FastifyPluginCallback<ViteRenderOptions> = (
   void fastify.register(FastifyCompress, {})
   void fastify.register(FastifyStatic, {
     root: path.join(distPath, 'client'),
+    index: false
   })
 
   const template = fs.readFileSync(path.join(distPath, 'client/index.html'), 'utf-8')
   // const manifest = require(path.join(distPath, 'client/ssr-manifest.json'))
   const serverModule = require(path.join(distPath, 'server/main.js')) as SvelteRenderServerModule | ReactRenderServerModule
+
 
   function ssrRender(request: FastifyRequest) {
     try {

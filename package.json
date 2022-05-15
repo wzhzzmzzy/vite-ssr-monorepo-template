@@ -1,5 +1,5 @@
 {
-  "name": "@sprinkle/monorepo",
+  "name": "@my-monorepo/monorepo",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -13,7 +13,6 @@
     "build:react:client": "vite build -c packages/react-app/vite.config.ts --emptyOutDir",
     "build:react:server": "vite build -c packages/react-app/vite.config.noexternal.ts",
     "build:react": "pnpm run build:react:client & pnpm run build:react:server",
-    "build:wasm": "wasm-pack build packages/excel-wasm --out-dir ../excel-wasm-dist --target web",
     "prepare": "husky install"
   },
   "author": "wzhzzmzzy",
@@ -35,6 +34,7 @@
     "@typescript-eslint/parser": "^5.18.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.12.0",
+    "esno": "^0.15.0",
     "husky": "^7.0.0",
     "lint-staged": "^12.3.7",
     "ts-node": "^10.7.0",

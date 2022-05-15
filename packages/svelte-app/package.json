@@ -1,5 +1,5 @@
 {
-  "name": "@sprinkle/svelte-app",
+  "name": "@my-monorepo/svelte-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",

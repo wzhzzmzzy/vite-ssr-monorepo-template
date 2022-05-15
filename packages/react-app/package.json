@@ -1,5 +1,5 @@
 {
-  "name": "@sprinkle/react-app",
+  "name": "@my-monorepo/react-app",
   "private": true,
   "version": "0.0.0",
   "scripts": {
