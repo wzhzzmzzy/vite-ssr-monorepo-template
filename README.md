@@ -1,4 +1,4 @@
-# Sprinkle
+# Vite SSR Monorepo Template
 
 Vite SSR template with Pnpm Monorepo, support React@18 and TypeScript
 
