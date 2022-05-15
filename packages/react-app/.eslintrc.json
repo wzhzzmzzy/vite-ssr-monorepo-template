@@ -1,0 +1,35 @@
+{
+  "extends": [
+    "../../.eslintrc.js",
+    "plugin:react/recommended"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": [
+    "public"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts", "*.tsx"
+      ],
+      "parserOptions": {
+        "project": [
+          "./tsconfig.json",
+          "./tsconfig.node.json"
+        ]
+      }
+    }
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off"
+  }
+}
