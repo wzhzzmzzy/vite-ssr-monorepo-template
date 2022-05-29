@@ -17,6 +17,6 @@ export type RenderToVueString = (props: VuePageProps, { ctx }: RenderOptions) =>
 
 export type RenderToVueStream = (props: VuePageProps, { ctx }: RenderOptions) => {
   stream: Promise<Readable>
-  head: string
-  state: string
+  getHead: () => string
+  getState: () => string
 }

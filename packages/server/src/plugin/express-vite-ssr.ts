@@ -52,23 +52,28 @@ function vueModuleRender (
   props: VuePageProps
 ) {
   const [headPrefix, headRestString] = template.split('<!--head-outlet-->')
-  const [statePrefix, stateRestString] = headRestString.split('<!--state-outlet-->')
-  const [ssrPrefix, ssrRestString] = stateRestString.split('<!--ssr-outlet-->')
-  const { stream, head, state } = serverModule.default.renderToStream(props, { ctx: {} })
+  const [ssrPrefix, ssrRestString] = headRestString.split('<!--ssr-outlet-->')
+  const [statePrefix, stateRestString] = ssrRestString.split('<!--state-outlet-->')
+  const { stream, getHead, getState } = serverModule.default.renderToStream(props, { ctx: {} })
 
   res.statusCode = 200
   res.type('html')
-  res.write(headPrefix)
-  res.write(head)
-  res.write(statePrefix)
-  res.write(state)
-  res.write(ssrPrefix)
+
+  let headRendered = false
   void stream.then((s: Readable) => {
     s.on('data', (chunk: Buffer) => {
+      if (!headRendered) {
+        res.write(headPrefix)
+        res.write(getHead())
+        res.write(ssrPrefix)
+        headRendered = true
+      }
       res.write(chunk)
     })
     s.on('end', () => {
-      res.end(ssrRestString)
+      res.write(statePrefix)
+      res.write(getState())
+      res.end(stateRestString)
     })
   })
 }

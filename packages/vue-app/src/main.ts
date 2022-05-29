@@ -46,8 +46,8 @@ const serverRenderToStream : RenderToVueStream = (props, { ctx }) => {
   const { app, router, pinia, head } = createApp(props)
   return {
     stream: router.isReady().then(() => renderToNodeStream(app, ctx)),
-    head: renderHead(head),
-    state: devalue(pinia.state.value)
+    getHead: () => renderHead(head),
+    getState: () => devalue(pinia.state.value)
   }
 }
 
@@ -59,8 +59,8 @@ function clientHydrate () {
   } = createApp()
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  pinia.state.value = window.__pinia
   void router.isReady().then(() => {
+    pinia.state.value = window.__pinia
     app.mount('#app')
   })
 }
