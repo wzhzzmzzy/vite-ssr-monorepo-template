@@ -30,9 +30,6 @@ function reactModuleRender (
   const [headPrefix, headRestString] = template.split('<!--head-outlet-->')
   const [ssrPrefix, ssrRestString] = headRestString.split('<!--ssr-outlet-->')
   const { stream, renderHead } = serverModule.default.renderToStream(props, {
-    identifierPrefix: 'identifierPrefix',
-    namespaceURI: 'namespaceURI',
-    nonce: 'nonce',
     onShellReady() {
       res.statusCode = 200
       res.type('html')
