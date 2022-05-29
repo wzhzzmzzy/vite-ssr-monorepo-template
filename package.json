@@ -15,6 +15,9 @@
     "build:react:client": "vite build -c packages/react-app/vite.config.ts --emptyOutDir",
     "build:react:server": "vite build -c packages/react-app/vite.config.noexternal.ts",
     "build:react": "pnpm run build:react:client & pnpm run build:react:server",
+    "build:vue:client": "vite build -c packages/vue-app/vite.config.ts --emptyOutDir",
+    "build:vue:server": "vite build -c packages/vue-app/vite.config.noexternal.ts",
+    "build:vue": "pnpm run build:vue:client & pnpm run build:vue:server",
     "prepare": "husky install"
   },
   "author": "wzhzzmzzy",
@@ -40,6 +43,6 @@
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
     "typescript": "^4.6.2",
-    "vite": "^2.8.0"
+    "vite": "^2.9.9"
   }
 }

@@ -2,19 +2,6 @@
   "extends": [
     "../../.eslintrc.js"
   ],
-  "overrides": [
-    {
-      "files": [
-        "*.ts", "*.tsx"
-      ],
-      "parserOptions": {
-        "project": [
-          "./tsconfig.json",
-          "./tsconfig.node.json"
-        ]
-      }
-    }
-  ],
   "env": {
     "node": true,
     "es2020": true

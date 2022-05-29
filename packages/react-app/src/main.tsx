@@ -1,14 +1,11 @@
 import React from 'react'
 import {hydrateRoot} from 'react-dom/client'
-import {renderToPipeableStream, RenderToPipeableStreamOptions, renderToString} from 'react-dom/server'
+import {renderToPipeableStream, renderToString} from 'react-dom/server'
 import {BrowserRouter} from 'react-router-dom'
 import {FilledContext, HelmetProvider} from 'react-helmet-async'
 import App from './App'
 import Page from './Page'
-
-interface PageProps {
-  url: string
-}
+import {RenderToReactStream, RenderToReactString} from '../types/server'
 
 function serverHelmetRender() {
   const helmetContext = {}
@@ -28,7 +25,7 @@ function serverHelmetRender() {
   }
 }
 
-function serverRenderToString({ url }: PageProps) {
+const serverRenderToString: RenderToReactString = ({ url }) => {
   const { helmetContext, renderHead } = serverHelmetRender()
   const html = renderToString(
     <Page url={url} helmetContext={helmetContext} />
@@ -36,11 +33,11 @@ function serverRenderToString({ url }: PageProps) {
   return {html, head: renderHead()}
 }
 
-function serverRenderToSteam({ url }: PageProps, streamOption?: RenderToPipeableStreamOptions) {
+const serverRenderToStream: RenderToReactStream = ({ url }, streamOptions) => {
   const { helmetContext, renderHead } = serverHelmetRender()
   const stream = renderToPipeableStream(
     <Page url={url} helmetContext={helmetContext} />,
-    streamOption
+    streamOptions
   )
   return {stream, renderHead}
 }
@@ -58,5 +55,5 @@ function clientHydrate () {
 
 export default import.meta.env.SSR ? {
   render: serverRenderToString,
-  renderToStream: serverRenderToSteam
+  renderToStream: serverRenderToStream
 } : clientHydrate()

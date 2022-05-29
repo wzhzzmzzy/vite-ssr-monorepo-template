@@ -3,29 +3,30 @@ import * as path from 'path'
 import type {ViteDevServer} from 'vite'
 import * as express from 'express'
 import type {Express, Request, Response} from 'express'
-import type {PipeableStream, RenderToPipeableStreamOptions} from 'react-dom/server'
+import type { ReactPageProps, RenderToReactStream } from '@my-monorepo/react-app/types/server'
+import type { VuePageProps, RenderToVueStream } from '@my-monorepo/vue-app/types/server'
+import {Readable} from 'stream'
 
 export interface ViteRenderOptions {
   appPackage: string
-  framework: 'react'
+  framework: 'react' | 'vue'
 }
 
-type ViteRenderServerModule<T> = {
+type ViteRenderStreamModule<T> = {
   default: {
-    renderToStream: (props: Record<string, string>, streamOptions?:RenderToPipeableStreamOptions) => T
+    renderToStream: T
   }
 }
 
-type ReactRenderStreamModule = ViteRenderServerModule<{
-  stream: PipeableStream
-  renderHead: () => string
-}>
+type ReactRenderStreamModule = ViteRenderStreamModule<RenderToReactStream>
+
+type VueRenderStreamModule = ViteRenderStreamModule<RenderToVueStream>
 
 function reactModuleRender (
   res: Response,
   template: string,
   serverModule : ReactRenderStreamModule,
-  props: Record<string, string>
+  props: ReactPageProps
 ) {
   const [headPrefix, headRestString] = template.split('<!--head-outlet-->')
   const [ssrPrefix, ssrRestString] = headRestString.split('<!--ssr-outlet-->')
@@ -41,6 +42,34 @@ function reactModuleRender (
     onAllReady() {
       res.end(ssrRestString)
     }
+  })
+}
+
+function vueModuleRender (
+  res: Response,
+  template: string,
+  serverModule : VueRenderStreamModule,
+  props: VuePageProps
+) {
+  const [headPrefix, headRestString] = template.split('<!--head-outlet-->')
+  const [statePrefix, stateRestString] = headRestString.split('<!--state-outlet-->')
+  const [ssrPrefix, ssrRestString] = stateRestString.split('<!--ssr-outlet-->')
+  const { stream, head, state } = serverModule.default.renderToStream(props, { ctx: {} })
+
+  res.statusCode = 200
+  res.type('html')
+  res.write(headPrefix)
+  res.write(head)
+  res.write(statePrefix)
+  res.write(state)
+  res.write(ssrPrefix)
+  void stream.then((s: Readable) => {
+    s.on('data', (chunk: Buffer) => {
+      res.write(chunk)
+    })
+    s.on('end', () => {
+      res.end(ssrRestString)
+    })
   })
 }
 
@@ -92,6 +121,8 @@ export class ViteRenderModule implements ServerRenderModule {
 
       if (framework === 'react') {
         return reactModuleRender(res, template, serverModule as ReactRenderStreamModule, { url: baseUrl })
+      } else if (framework === 'vue') {
+        return vueModuleRender(res, template, serverModule as VueRenderStreamModule, { url: baseUrl })
       } else {
         throw new Error(`Unsupported framework: ${framework as string}`)
       }
@@ -106,14 +137,14 @@ export class ViteRenderModule implements ServerRenderModule {
 export class BundleRenderModule implements ServerRenderModule {
   renderOptions: ViteRenderOptions
   template: string
-  serverModule: ViteRenderServerModule<unknown>
+  serverModule: ViteRenderStreamModule<unknown>
 
   constructor(app: Express, opts: ViteRenderOptions) {
     this.renderOptions = opts
     const distPath = path.join(process.cwd(), 'dist')
     this.template = fs.readFileSync(path.join(distPath, 'client/index.html'), 'utf-8')
     // const manifest = require(path.join(distPath, 'client/ssr-manifest.json'))
-    this.serverModule = require(path.join(distPath, 'server/main.js')) as ViteRenderServerModule<unknown>
+    this.serverModule = require(path.join(distPath, 'server/main.js')) as ViteRenderStreamModule<unknown>
 
     app.use(express.static(path.join(distPath, 'client'), { index: false }))
   }
@@ -123,6 +154,8 @@ export class BundleRenderModule implements ServerRenderModule {
     const { framework } = this.renderOptions
     if (framework === 'react') {
       return reactModuleRender(res, this.template, this.serverModule as ReactRenderStreamModule, { url: baseUrl })
+    } else if (framework === 'vue') {
+      return vueModuleRender(res, this.template, this.serverModule as VueRenderStreamModule, { url: baseUrl })
     } else {
       throw new Error(`Unsupported framework: ${framework as string}`)
     }

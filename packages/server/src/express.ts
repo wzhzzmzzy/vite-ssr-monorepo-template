@@ -5,8 +5,8 @@ async function createServer () {
   const app = express()
 
   const reactRenderOptions: ViteRenderOptions = {
-    appPackage: '@my-monorepo/react-app',
-    framework: 'react'
+    appPackage: '@my-monorepo/vue-app',
+    framework: 'vue'
   }
   
   const ssrModule = await createRenderModule(app, reactRenderOptions)

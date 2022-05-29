@@ -1,0 +1,16 @@
+{
+  "parser": "vue-eslint-parser",
+  "extends": [
+    "../../.eslintrc.js",
+    "plugin:vue/vue3-recommended"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true
+  }
+}
