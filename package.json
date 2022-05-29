@@ -5,8 +5,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=\"development\" ts-node ./packages/server/src/index.ts",
-    "serve": "cross-env NODE_ENV=\"production\" ts-node ./packages/server/src/index.ts",
+    "dev:fastify": "cross-env NODE_ENV=\\\"development\\\" ts-node packages/server/src/fastify.ts",
+    "serve:fasitfy": "cross-env NODE_ENV=\\\"production\\\" ts-node packages/server/src/fastify.ts",
+    "dev:express": "cross-env NODE_ENV=\\\"development\\\" ts-node packages/server/src/express.ts",
+    "serve:express": "cross-env NODE_ENV=\\\"production\\\" ts-node packages/server/src/express.ts",
     "build:svelte:client": "vite build -c packages/svelte-app/vite.config.ts",
     "build:svelte:server": "vite build -c packages/svelte-app/vite.config.noexternal.ts",
     "build:svelte": "pnpm run build:svelte:client & pnpm run build:svelte:server",
@@ -23,7 +25,6 @@
     ]
   },
   "dependencies": {
-    "fastify": "^3.27.4",
     "immer": "^9.0.12"
   },
   "devDependencies": {
@@ -34,7 +35,6 @@
     "@typescript-eslint/parser": "^5.18.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.12.0",
-    "esno": "^0.15.0",
     "husky": "^7.0.0",
     "lint-staged": "^12.3.7",
     "ts-node": "^10.7.0",
