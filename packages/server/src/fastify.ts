@@ -1,5 +1,5 @@
 import Fastify, {FastifyInstance, FastifyRequest} from 'fastify'
-import viteRender, {ViteRenderOptions} from './plugin/vite-ssr'
+import viteRender, {ViteRenderOptions} from './plugin/fasitfy-vite-ssr'
 
 type SSRApp = FastifyInstance & {
   viteRender: (request: FastifyRequest) => Promise<string>
@@ -19,7 +19,7 @@ function createServer(): FastifyInstance {
 
   void app.register<ViteRenderOptions>(viteRender, reactRenderOptions)
 
-  app.get('/', async (request, reply) => {
+  app.get('*', async (request, reply) => {
     try {
       const html = await (app as unknown as SSRApp).viteRender(request)
       void reply.type('text/html').send(html)

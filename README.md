@@ -18,7 +18,7 @@ Vite SSR template with Pnpm Monorepo, support React@18 and TypeScript
 
 ## Develop your own project
 
-> With node.js 16 & pnpm, default app is `react-app`, if you want to use `svelte-app`, you can edit `server/index.ts` to use it.
+> With node.js 16 & pnpm, default app is `react-app`, if you want to use `svelte-app`, you can edit `server/fastify.ts` to use it.
 If you don't need `svelte-app`, just delete it.
 
 You can replace `@my-monorepo` globally with your monorepo space.
